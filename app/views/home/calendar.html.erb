@@ -1,0 +1,72 @@
+<%= link_to 'Sign Out', sign_out_path, method: :delete %>
+<br>
+<div class="row">
+  <div class="offset-m2 m10 center-align">
+    <h2 id="month">
+    <%= link_to '<', date: @today.prev_month %>
+    <%= @today.strftime('%B %Y') %>
+    <%= link_to '>', date: @today.next_month %>
+    </h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Sun</th>
+          <th>Mon</th>
+          <th>Tues</th>
+          <th>Wed</th>
+          <th>Thurs</th>
+          <th>Fri</th>
+          <th>Sat</th>
+        </tr>
+      </thead>
+
+      <tbody>
+      <% @weeks.each do |week| %>
+        <tr>
+        <% week.each do |day| %>
+          <td data-target="modal1" class="modal-trigger">
+            <div class="hide-scroll">
+              <span class="cal-days"><%= day.strftime('%-m/%-d') %></span>
+              <% @events_by_date.each do |event| %>
+                <ul>
+                  <% if event.start_time == day || (day > event.start_time && day <= event.end_time) %>
+                    <% @single_event = Calendar.find(event.id) %>
+                    <li><span class="single-event"><%= event.title %></span></li>
+                  <% end %>
+                </ul>
+              <% end %>
+            </div>
+          </td>
+        <% end %>
+        </tr>
+      <% end %>
+      </tbody>
+      
+    </table>
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+      <div class="modal-content">
+        <h4>Add Event</h4>
+        <p>
+          <%= form_for @event, :url => api_calendars_path, method: :create do |f| %>
+            <%= f.text_field :title, placeholder: "Title", class: 'event-title' %>
+            <%= f.text_field :body, placeholder: "Description", class: 'event-description' %>
+            <%= f.text_field :location, placeholder: "Location", class: 'event-location' %>
+            <%= f.label :start_time, "Start Date & End Date" %>
+            <%= f.date_select(:start_time, :order => [:month, :day], :default => Date.today, use_two_digit_numbers: true, :discard_year => true, class: 'event-start')%>
+            <%= f.label :end_time, "End Date" %>
+            <%= f.date_select(:end_time, :order => [:month, :day], :default => Date.today, use_two_digit_numbers: true, :discard_year => true, class: 'event-end')%>
+            <div>
+            <%= f.submit "Submit", class: "btn btn-primary add-event-button" %>
+            </div>
+          <% end %>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-close waves-effect btn-flat">Close</button>
+      </div>
+    </div>
+  
+  </div>
+</div>

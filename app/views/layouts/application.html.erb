@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Spotify Calendar</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <meta name="turbolinks-cache-control" content="no-cache">
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+  <div class="container flow-text">
+    <% flash.keys.each do |type| %>
+    <div class="flash <%= type %>">
+    <%= flash[type] %>
+    <a class="close-button" href="#">X</a>
+  </div>
+  <% end %>
+    <%= yield %>
+  </body>
+</html>
